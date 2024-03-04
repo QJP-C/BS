@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="客户代码" prop="code">
-        <el-input v-model="queryParams.code" placeholder="请输入客户代码" clearable @keyup.enter="handleQuery" />
+      <el-form-item label="客户编码" prop="code">
+        <el-input v-model="queryParams.code" placeholder="请输入客户编码" clearable @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item label="客户名称" prop="name">
         <el-input v-model="queryParams.name" placeholder="请输入客户名称" clearable @keyup.enter="handleQuery" />
@@ -47,7 +47,7 @@
 
     <el-table v-loading="loading" :data="customerList" @selection-change="handleSelectionChange" border>
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="客户代码" align="center" prop="code" />
+      <el-table-column label="客户编码" align="center" prop="code" />
       <el-table-column label="客户名称" align="center" prop="name" />
       <el-table-column label="客户类型" align="center" prop="type">
         <template #default="scope">
@@ -82,8 +82,8 @@
     <!-- 添加或修改客户对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="customerRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="客户代码" prop="code">
-          <el-input v-model="form.code" placeholder="请输入客户代码" disabled />
+        <el-form-item label="客户编码" prop="code">
+          <el-input v-model="form.code" placeholder="请输入客户编码" disabled />
         </el-form-item>
         <el-form-item label="客户名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户名称" />
