@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+// 获取客户编码
+export function getCode() {
+  return request({
+    url: '/base/customer/getCode',
+    method: 'get'
+  })
+}
+
 // 查询客户列表
 export function listCustomer(query) {
   return request({
