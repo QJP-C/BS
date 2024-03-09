@@ -50,29 +50,6 @@
       <el-form-item label="币种ID" prop="currencyId">
         <el-input v-model="queryParams.currencyId" placeholder="请输入币种ID" clearable @keyup.enter="handleQuery" />
       </el-form-item>
-      <el-form-item label="发票ID" prop="invoiceId">
-        <el-input v-model="queryParams.invoiceId" placeholder="请输入发票ID" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="发票时间" prop="invoiceTime">
-        <el-date-picker clearable v-model="queryParams.invoiceTime" type="date" value-format="YYYY-MM-DD"
-          placeholder="请选择发票时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="账单ID" prop="billId">
-        <el-input v-model="queryParams.billId" placeholder="请输入账单ID" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="部门ID" prop="deptId">
-        <el-input v-model="queryParams.deptId" placeholder="请输入部门ID" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="扩展字段" prop="extendedField">
-        <el-input v-model="queryParams.extendedField" placeholder="请输入扩展字段" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="扩展字段1" prop="extendedField1">
-        <el-input v-model="queryParams.extendedField1" placeholder="请输入扩展字段1" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="扩展字段2" prop="extendedField2">
-        <el-input v-model="queryParams.extendedField2" placeholder="请输入扩展字段2" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
       <el-form-item label="是否创建账单" prop="isCreateBill">
         <el-input v-model="queryParams.isCreateBill" placeholder="请输入是否创建账单" clearable @keyup.enter="handleQuery" />
       </el-form-item>
@@ -153,13 +130,6 @@
       </el-table-column>
       <el-table-column label="费用价格" align="center" prop="amountTotal" />
       <el-table-column label="币种ID" align="center" prop="currencyId" />
-      <el-table-column label="发票ID" align="center" prop="invoiceId" />
-      <el-table-column label="发票时间" align="center" prop="invoiceTime" width="180" />
-      <el-table-column label="账单ID" align="center" prop="billId" />
-      <el-table-column label="部门ID" align="center" prop="deptId" />
-      <el-table-column label="扩展字段" align="center" prop="extendedField" />
-      <el-table-column label="扩展字段1" align="center" prop="extendedField1" />
-      <el-table-column label="扩展字段2" align="center" prop="extendedField2" />
       <el-table-column label="是否创建账单" align="center" prop="isCreateBill">
         <template #default="scope">
           <dict-tag :options="base_currency_yes_no" :value="scope.row.isCreateBill" />
@@ -187,112 +157,104 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
-      @pagination="getList" />
+    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
+      v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改费用清单对话框 -->
-    <el-dialog :title="title" v-model="open" width="500px" append-to-body>
+    <el-dialog :title="title" v-model="open" width="660px" append-to-body>
       <el-form ref="expensesRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="费用编码" prop="busCode">
-          <el-input v-model="form.busCode" placeholder="请输入费用编码" disabled/>
-        </el-form-item>
-        <el-form-item label="订单ID" prop="orderId">
-          <el-input v-model="form.orderId" placeholder="请输入订单ID" />
-        </el-form-item>
-        <el-form-item label="仓库ID" prop="warehouseId">
-          <el-input v-model="form.warehouseId" placeholder="请输入仓库ID" />
-        </el-form-item>
-        <el-form-item label="费用发生日期" prop="amountTime">
-          <el-date-picker clearable v-model="form.amountTime" type="date" value-format="YYYY-MM-DD"
-            placeholder="请选择费用发生日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="财务年" prop="amountYear">
-          <el-input v-model="form.amountYear" placeholder="请输入财务年" />
-        </el-form-item>
-        <el-form-item label="财务月" prop="amountMonth">
-          <el-input v-model="form.amountMonth" placeholder="请输入财务月" />
-        </el-form-item>
-        <el-form-item label="客户ID" prop="customerId">
-          <el-input v-model="form.customerId" placeholder="请输入客户ID" />
-        </el-form-item>
-        <el-form-item label="收付类型" prop="paymentType">
-          <el-select v-model="form.paymentType" placeholder="请选择收付类型">
-            <el-option v-for="dict in base_expense_payment_type" :key="dict.value" :label="dict.label"
-              :value="parseInt(dict.value)"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="付费方式" prop="paymentMethod">
-          <el-input v-model="form.paymentMethod" placeholder="请输入付费方式" />
-        </el-form-item>
-        <el-form-item label="来源系统" prop="sourceSys">
-          <el-input v-model="form.sourceSys" placeholder="请输入来源系统" />
-        </el-form-item>
-        <el-form-item label="费用项ID" prop="expenseItemId">
-          <el-input v-model="form.expenseItemId" placeholder="请输入费用项ID" />
-        </el-form-item>
-        <el-form-item label="费用类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择费用类型">
-            <el-option v-for="dict in bms_expense_type" :key="dict.value" :label="dict.label"
-              :value="parseInt(dict.value)"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="费用价格" prop="amountTotal">
-          <el-input v-model="form.amountTotal" placeholder="请输入费用价格" />
-        </el-form-item>
-        <el-form-item label="币种ID" prop="currencyId">
-          <el-input v-model="form.currencyId" placeholder="请输入币种ID" />
-        </el-form-item>
-        <el-form-item label="发票ID" prop="invoiceId">
-          <el-input v-model="form.invoiceId" placeholder="请输入发票ID" />
-        </el-form-item>
-        <el-form-item label="发票时间" prop="invoiceTime">
-          <el-date-picker clearable v-model="form.invoiceTime" type="date" value-format="YYYY-MM-DD"
-            placeholder="请选择发票时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="账单ID" prop="billId">
-          <el-input v-model="form.billId" placeholder="请输入账单ID" />
-        </el-form-item>
-        <el-form-item label="部门ID" prop="deptId">
-          <el-input v-model="form.deptId" placeholder="请输入部门ID" />
-        </el-form-item>
-        <el-form-item label="扩展字段" prop="extendedField">
-          <el-input v-model="form.extendedField" placeholder="请输入扩展字段" />
-        </el-form-item>
-        <el-form-item label="扩展字段1" prop="extendedField1">
-          <el-input v-model="form.extendedField1" placeholder="请输入扩展字段1" />
-        </el-form-item>
-        <el-form-item label="扩展字段2" prop="extendedField2">
-          <el-input v-model="form.extendedField2" placeholder="请输入扩展字段2" />
-        </el-form-item>
-        <el-form-item label="是否创建账单" prop="isCreateBill">
-          <el-input v-model="form.isCreateBill" placeholder="请输入是否创建账单" />
-        </el-form-item>
-        <el-form-item label="是否开发票" prop="isInvoiced">
-          <el-input v-model="form.isInvoiced" placeholder="请输入是否开发票" />
-        </el-form-item>
-        <el-form-item label="是否挂账" prop="isAccounted">
-          <el-input v-model="form.isAccounted" placeholder="请输入是否挂账" />
-        </el-form-item>
-        <el-form-item label="是否审核" prop="isApproved">
-          <el-input v-model="form.isApproved" placeholder="请输入是否审核" />
-        </el-form-item>
-        <el-form-item label="是否锁定" prop="isLocked">
-          <el-input v-model="form.isLocked" placeholder="请输入是否锁定" />
-        </el-form-item>
-        <el-form-item label="是否提交" prop="isSubmit">
-          <el-input v-model="form.isSubmit" placeholder="请输入是否提交" />
-        </el-form-item>
-        <el-form-item label="费用状态" prop="expenseStatus">
-          <el-radio-group v-model="form.expenseStatus">
-            <el-radio v-for="dict in bms_expense_status" :key="dict.value"
-              :label="parseInt(dict.value)">{{ dict.label }}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="驳回信息" prop="rejectInfo">
-          <el-input v-model="form.rejectInfo" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="费用编码" prop="busCode">
+              <el-input v-model="form.busCode" placeholder="请输入费用编码" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="订单ID" prop="orderId">
+              <el-input v-model="form.orderId" placeholder="请输入订单ID" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="仓库ID" prop="warehouseId">
+              <el-input v-model="form.warehouseId" placeholder="请输入仓库ID" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="发生日期" prop="amountTime">
+              <el-date-picker clearable v-model="form.amountTime" type="date" value-format="YYYY-MM-DD"
+                placeholder="请选择发生日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="财务年" prop="amountYear">
+              <el-input v-model="form.amountYear" placeholder="请输入财务年" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="财务月" prop="amountMonth">
+              <el-input v-model="form.amountMonth" placeholder="请输入财务月" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="客户ID" prop="customerId">
+              <el-input v-model="form.customerId" placeholder="请输入客户ID" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="收付类型" prop="paymentType">
+              <el-select v-model="form.paymentType" placeholder="请选择收付类型">
+                <el-option v-for="dict in base_expense_payment_type" :key="dict.value" :label="dict.label"
+                  :value="parseInt(dict.value)"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="付费方式" prop="paymentMethod">
+              <el-input v-model="form.paymentMethod" placeholder="请输入付费方式" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="来源系统" prop="sourceSys">
+              <el-input v-model="form.sourceSys" placeholder="请输入来源系统" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="费用项ID" prop="expenseItemId">
+              <el-input v-model="form.expenseItemId" placeholder="请输入费用项ID" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="费用类型" prop="type">
+              <el-select v-model="form.type" placeholder="请选择费用类型">
+                <el-option v-for="dict in bms_expense_type" :key="dict.value" :label="dict.label"
+                  :value="parseInt(dict.value)"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="费用价格" prop="amountTotal">
+              <el-input v-model="form.amountTotal" placeholder="请输入费用价格" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="币种ID" prop="currencyId">
+              <el-input v-model="form.currencyId" placeholder="请输入币种ID" />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="备注信息" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
