@@ -1,8 +1,11 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="费用编码" prop="busCode">
-        <el-input v-model="queryParams.busCode" placeholder="请输入费用编码" clearable @keyup.enter="handleQuery" />
+      <el-form-item label="费用编码" prop="code">
+        <el-input v-model="queryParams.code" placeholder="请输入费用编码" clearable @keyup.enter="handleQuery" />
+      </el-form-item>
+      <el-form-item label="费用名称" prop="name">
+        <el-input v-model="queryParams.name" placeholder="请输入费用名称" clearable @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item label="订单ID" prop="orderId">
         <el-input v-model="queryParams.orderId" placeholder="请输入订单ID" clearable @keyup.enter="handleQuery" />
@@ -10,16 +13,10 @@
       <el-form-item label="仓库ID" prop="warehouseId">
         <el-input v-model="queryParams.warehouseId" placeholder="请输入仓库ID" clearable @keyup.enter="handleQuery" />
       </el-form-item>
-      <el-form-item label="费用发生日期" prop="amountTime">
-        <el-date-picker clearable v-model="queryParams.amountTime" type="date" value-format="YYYY-MM-DD"
+      <el-form-item label="发生日期" prop="amountTime">
+        <el-date-picker clearable v-model="queryParams.amountTime" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
           placeholder="请选择费用发生日期">
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="财务年" prop="amountYear">
-        <el-input v-model="queryParams.amountYear" placeholder="请输入财务年" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="财务月" prop="amountMonth">
-        <el-input v-model="queryParams.amountMonth" placeholder="请输入财务月" clearable @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item label="客户ID" prop="customerId">
         <el-input v-model="queryParams.customerId" placeholder="请输入客户ID" clearable @keyup.enter="handleQuery" />
@@ -34,7 +31,10 @@
         <el-input v-model="queryParams.paymentMethod" placeholder="请输入付费方式" clearable @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item label="来源系统" prop="sourceSys">
-        <el-input v-model="queryParams.sourceSys" placeholder="请输入来源系统" clearable @keyup.enter="handleQuery" />
+        <el-select v-model="form.sourceSys" placeholder="请选择来源系统">
+          <el-option v-for="dict in bms_source_sys" :key="dict.value" :label="dict.label"
+            :value="parseInt(dict.value)"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="费用项ID" prop="expenseItemId">
         <el-input v-model="queryParams.expenseItemId" placeholder="请输入费用项ID" clearable @keyup.enter="handleQuery" />
@@ -98,14 +98,13 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="expensesList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="expensesList" @selection-change="handleSelectionChange" height="680px" border>
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="费用编码" align="center" prop="busCode" />
+      <el-table-column label="费用名称" align="center" prop="name" />
+      <el-table-column label="费用编码" align="center" prop="code" />
       <el-table-column label="订单ID" align="center" prop="orderId" />
       <el-table-column label="仓库ID" align="center" prop="warehouseId" />
       <el-table-column label="费用发生日期" align="center" prop="amountTime" width="180" />
-      <el-table-column label="财务年" align="center" prop="amountYear" />
-      <el-table-column label="财务月" align="center" prop="amountMonth" />
       <el-table-column label="客户ID" align="center" prop="customerId" />
       <el-table-column label="收付类型" align="center" prop="paymentType">
         <template #default="scope">
@@ -135,17 +134,37 @@
           <dict-tag :options="base_currency_yes_no" :value="scope.row.isCreateBill" />
         </template>
       </el-table-column>
-      <el-table-column label="是否开发票" align="center" prop="isInvoiced" />
-      <el-table-column label="是否挂账" align="center" prop="isAccounted" />
-      <el-table-column label="是否审核" align="center" prop="isApproved" />
-      <el-table-column label="是否锁定" align="center" prop="isLocked" />
-      <el-table-column label="是否提交" align="center" prop="isSubmit" />
+      <el-table-column label="是否开发票" align="center" prop="isInvoiced" >
+        <template #default="scope">
+          <dict-tag :options="base_currency_yes_no" :value="scope.row.isInvoiced" />
+        </template>
+      </el-table-column>
+      <el-table-column label="是否挂账" align="center" prop="isAccounted" >
+        <template #default="scope">
+          <dict-tag :options="base_currency_yes_no" :value="scope.row.isAccounted" />
+        </template>
+      </el-table-column>
+      <el-table-column label="是否审核" align="center" prop="isApproved" >
+        <template #default="scope">
+          <dict-tag :options="base_currency_yes_no" :value="scope.row.isApproved" />
+        </template>
+      </el-table-column>
+      <el-table-column label="是否锁定" align="center" prop="isLocked" >
+        <template #default="scope">
+          <dict-tag :options="base_currency_yes_no" :value="scope.row.isLocked" />
+        </template>
+      </el-table-column>
+      <el-table-column label="是否提交" align="center" prop="isSubmit" >
+        <template #default="scope">
+          <dict-tag :options="base_currency_yes_no" :value="scope.row.isSubmit" />
+        </template>
+      </el-table-column>
       <el-table-column label="费用状态" align="center" prop="expenseStatus">
         <template #default="scope">
           <dict-tag :options="bms_expense_status" :value="scope.row.expenseStatus" />
         </template>
       </el-table-column>
-      <el-table-column label="驳回信息" align="center" prop="rejectInfo" />
+      <!-- <el-table-column label="驳回信息" align="center" prop="rejectInfo" /> -->
       <el-table-column label="备注信息" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
@@ -165,8 +184,8 @@
       <el-form ref="expensesRef" :model="form" :rules="rules" label-width="80px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="费用编码" prop="busCode">
-              <el-input v-model="form.busCode" placeholder="请输入费用编码" disabled />
+            <el-form-item label="费用编码" prop="code">
+              <el-input v-model="form.code" placeholder="请输入费用编码" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -177,27 +196,15 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="仓库ID" prop="warehouseId">
-              <el-input v-model="form.warehouseId" placeholder="请输入仓库ID" />
+            <el-form-item label="费用名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入费用名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="发生日期" prop="amountTime">
-              <el-date-picker clearable v-model="form.amountTime" type="date" value-format="YYYY-MM-DD"
+              <el-date-picker clearable v-model="form.amountTime" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
                 placeholder="请选择发生日期">
               </el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="财务年" prop="amountYear">
-              <el-input v-model="form.amountYear" placeholder="请输入财务年" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="财务月" prop="amountMonth">
-              <el-input v-model="form.amountMonth" placeholder="请输入财务月" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -219,12 +226,18 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="付费方式" prop="paymentMethod">
-              <el-input v-model="form.paymentMethod" placeholder="请输入付费方式" />
+              <el-select v-model="form.paymentMethod" placeholder="请选择付费方式">
+                <el-option v-for="dict in bms_payment_method" :key="dict.value" :label="dict.label"
+                  :value="parseInt(dict.value)"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="来源系统" prop="sourceSys">
-              <el-input v-model="form.sourceSys" placeholder="请输入来源系统" />
+              <el-select v-model="form.sourceSys" placeholder="请选择来源系统">
+                <el-option v-for="dict in bms_source_sys" :key="dict.value" :label="dict.label"
+                  :value="parseInt(dict.value)"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -255,6 +268,13 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row :span="12">
+          <el-col :span="12">
+            <el-form-item label="仓库ID" prop="warehouseId">
+              <el-input v-model="form.warehouseId" placeholder="请输入仓库ID" />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="备注信息" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
@@ -273,7 +293,7 @@
 import { listExpenses, getExpenses, delExpenses, addExpenses, updateExpenses, getCode } from "@/api/bms/expenses";
 
 const { proxy } = getCurrentInstance();
-const { base_expense_payment_type, bms_expense_type, bms_expense_status } = proxy.useDict('base_expense_payment_type', 'bms_expense_type', 'bms_expense_status');
+const { base_expense_payment_type, bms_expense_type, bms_expense_status,bms_payment_method,bms_source_sys,base_currency_yes_no } = proxy.useDict('base_expense_payment_type', 'bms_expense_type', 'bms_expense_status','bms_payment_method','bms_source_sys','base_currency_yes_no');
 
 const expensesList = ref([]);
 const open = ref(false);
@@ -290,7 +310,7 @@ const data = reactive({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    busCode: null,
+    code: null,
     orderId: null,
     warehouseId: null,
     amountTime: null,
@@ -321,7 +341,7 @@ const data = reactive({
     rejectInfo: null,
   },
   rules: {
-    busCode: [
+    code: [
       { required: true, message: "费用编码不能为空", trigger: "blur" }
     ],
     orderId: [
@@ -373,7 +393,7 @@ function cancel() {
 function reset() {
   form.value = {
     id: null,
-    busCode: null,
+    code: null,
     orderId: null,
     warehouseId: null,
     amountTime: null,
@@ -436,7 +456,7 @@ function handleAdd() {
   open.value = true;
   title.value = "添加费用清单";
   getCode().then(response => {
-    form.value.busCode = response.msg;
+    form.value.code = response.msg;
   });
 }
 
