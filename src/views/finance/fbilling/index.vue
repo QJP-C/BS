@@ -126,11 +126,11 @@
           </el-form-item>
         </el-col>
         <el-col :xs="8" :sm="8" :md="6">
-          <el-form-item label="费用状态" prop="expenseStatus">
+          <!-- <el-form-item label="费用状态" prop="expenseStatus">
             <el-select v-model="queryParams.expenseStatus" placeholder="请选择费用状态" clearable>
               <el-option v-for="dict in bms_expense_status" :key="dict.value" :label="dict.label" :value="dict.value" />
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
         </el-col>
         <el-col :xs="8" :sm="8" :md="6" style="padding-left: 120px;">
           <el-form-item>
@@ -142,7 +142,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['bms:expenses:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -152,10 +152,14 @@
       <el-col :span="1.5">
         <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['bms:expenses:remove']">删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col> -->
+      <!-- <el-col :span="1.5">
         <el-button type="warning" plain icon="Download" @click="handleExport"
           v-hasPermi="['bms:expenses:export']">导出</el-button>
+      </el-col> -->
+      <!-- 审核通过 -->
+      <el-col :span="1.5">
+        <el-button type="primary" plain icon="Check" @click="handleApproved" v-hasPermi="['bms:expenses:approved']">审核通过</el-button>
       </el-col>
       <!-- <el-col :span="1.5">
         <el-button type="primary" plain icon="Upload" @click="handleSubmit" v-hasPermi="['bms:expenses:submit']">提交审核</el-button>
@@ -292,7 +296,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="客户" prop="customerId">
+            <el-form-item label="客户ID" prop="customerId">
               <el-select v-model="form.customerId" placeholder="请选择客户">
                 <el-option v-for="item in customerOptions" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
@@ -380,7 +384,7 @@
 </template>
 
 <script setup name="Expenses">
-import { listExpenses, getExpenses, delExpenses, addExpenses, updateExpenses, getCode, submitExpense } from "@/api/bms/expenses";
+import { getExpenses, delExpenses, addExpenses, updateExpenses, getCode, submitExpense,getFinanceBillingList,approvedExpense } from "@/api/bms/expenses";
 import { getAllWarehouse } from "@/api/base/warehouse";
 import { getAllCustomer } from "@/api/base/customer";
 import { getAllCurrency } from "@/api/base/currency";
@@ -447,7 +451,7 @@ const data = reactive({
       { required: true, message: "费用发生日期不能为空", trigger: "blur" }
     ],
     customerId: [
-      { required: true, message: "客户不能为空", trigger: "blur" }
+      { required: true, message: "客户ID不能为空", trigger: "blur" }
     ],
     paymentType: [
       { required: true, message: "收付类型不能为空", trigger: "change" }
@@ -472,7 +476,7 @@ const { queryParams, form, rules } = toRefs(data);
 /** 查询费用清单列表 */
 function getList() {
   loading.value = true;
-  listExpenses(queryParams.value).then(response => {
+  getFinanceBillingList(queryParams.value).then(response => {
     expensesList.value = response.rows;
     total.value = response.total;
     loading.value = false;
@@ -588,14 +592,17 @@ function submitForm() {
   });
 }
 
-// 提交审核
-function handleSubmit() {
-  const _ids = ids.value;
-  proxy.$modal.confirm('是否确认提交审核费用清单编号为"' + _ids + '"的数据项？').then(function () {
-    return submitExpense(_ids);
+// 审核通过
+function handleApproved() {
+  if (ids.value.length == 0) {
+    proxy.$modal.msgWarning("请选择需要审核的费用清单");
+    return;
+  }
+  proxy.$modal.confirm('是否确认审核通过费用清单编号为"' + ids.value + '"的数据项？').then(function () {
+    return approvedExpense(ids.value);
   }).then(() => {
     getList();
-    proxy.$modal.msgSuccess("提交成功");
+    proxy.$modal.msgSuccess("审核成功");
   }).catch(() => { });
 }
 

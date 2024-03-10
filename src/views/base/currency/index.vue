@@ -9,7 +9,7 @@
       </el-form-item>
       <el-form-item label="是否本币" prop="isLocal">
         <el-select v-model="queryParams.isLocal" placeholder="请选择是否本币" clearable>
-          <el-option v-for="dict in base_currency_yes_no" :key="dict.value" :label="dict.label" :value="dict.value" />
+          <el-option v-for="dict in business_yes_no" :key="dict.value" :label="dict.label" :value="dict.value" />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -43,7 +43,7 @@
       <el-table-column label="币种编码" align="center" prop="code" />
       <el-table-column label="是否本币" align="center" prop="isLocal">
         <template #default="scope">
-          <dict-tag :options="base_currency_yes_no" :value="scope.row.isLocal" />
+          <dict-tag :options="business_yes_no" :value="scope.row.isLocal" />
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
@@ -86,7 +86,7 @@
         </el-form-item>
         <el-form-item label="是否本币" prop="isLocal">
           <el-radio-group v-model="form.isLocal">
-            <el-radio v-for="dict in base_currency_yes_no" :key="dict.value"
+            <el-radio v-for="dict in business_yes_no" :key="dict.value"
               :label="parseInt(dict.value)">{{ dict.label }}</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -109,7 +109,7 @@
 import { listCurrency, getCurrency, delCurrency, addCurrency, updateCurrency } from "@/api/base/currency";
 
 const { proxy } = getCurrentInstance();
-const { base_currency_yes_no } = proxy.useDict('base_currency_yes_no');
+const { business_yes_no } = proxy.useDict('business_yes_no');
 
 const currencyList = ref([]);
 const open = ref(false);

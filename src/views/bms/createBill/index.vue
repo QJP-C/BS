@@ -126,11 +126,11 @@
           </el-form-item>
         </el-col>
         <el-col :xs="8" :sm="8" :md="6">
-          <el-form-item label="费用状态" prop="expenseStatus">
+          <!-- <el-form-item label="费用状态" prop="expenseStatus">
             <el-select v-model="queryParams.expenseStatus" placeholder="请选择费用状态" clearable>
               <el-option v-for="dict in bms_expense_status" :key="dict.value" :label="dict.label" :value="dict.value" />
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
         </el-col>
         <el-col :xs="8" :sm="8" :md="6" style="padding-left: 120px;">
           <el-form-item>
@@ -142,7 +142,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['bms:expenses:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -152,21 +152,23 @@
       <el-col :span="1.5">
         <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['bms:expenses:remove']">删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col> -->
+      <!-- <el-col :span="1.5">
         <el-button type="warning" plain icon="Download" @click="handleExport"
           v-hasPermi="['bms:expenses:export']">导出</el-button>
-      </el-col>
-      <!-- <el-col :span="1.5">
-        <el-button type="primary" plain icon="Upload" @click="handleSubmit" v-hasPermi="['bms:expenses:submit']">提交审核</el-button>
       </el-col> -->
+      <!-- 生成账单 -->
+      <el-col :span="1.5">
+        <el-button type="primary" plain icon="Check" @click="handleCreate" :disabled="multiple"
+          v-hasPermi="['bms:expenses:submit']">生成账单</el-button>
+      </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="expensesList" @selection-change="handleSelectionChange" height="680px" border>
-      <el-table-column type="selection" width="55" align="center" fixed="left"/>
-      <el-table-column label="费用名称" align="center" prop="name" width="140"/>
-      <el-table-column label="费用编码" align="center" prop="code" width="160"/>
+      <el-table-column type="selection" width="55" align="center" fixed="left" />
+      <el-table-column label="费用名称" align="center" prop="name" width="140" />
+      <el-table-column label="费用编码" align="center" prop="code" width="160" />
       <el-table-column label="订单ID" align="center" prop="orderId" />
       <el-table-column label="仓库" align="center" prop="warehouseId">
         <template #default="scope">
@@ -206,7 +208,7 @@
         </template>
       </el-table-column>
       <el-table-column label="费用价格" align="center" prop="amountTotal" />
-      <el-table-column label="币种" align="center" prop="currencyId" >
+      <el-table-column label="币种" align="center" prop="currencyId">
         <template #default="scope">
           <dict-tag :options="currencyOptions" :value="scope.row.currencyId" />
         </template>
@@ -380,7 +382,7 @@
 </template>
 
 <script setup name="Expenses">
-import { listExpenses, getExpenses, delExpenses, addExpenses, updateExpenses, getCode, submitExpense } from "@/api/bms/expenses";
+import { getExpenses, delExpenses, addExpenses, updateExpenses, getCode, submitExpense, getBillingList } from "@/api/bms/expenses";
 import { getAllWarehouse } from "@/api/base/warehouse";
 import { getAllCustomer } from "@/api/base/customer";
 import { getAllCurrency } from "@/api/base/currency";
@@ -472,7 +474,7 @@ const { queryParams, form, rules } = toRefs(data);
 /** 查询费用清单列表 */
 function getList() {
   loading.value = true;
-  listExpenses(queryParams.value).then(response => {
+  getBillingList(queryParams.value).then(response => {
     expensesList.value = response.rows;
     total.value = response.total;
     loading.value = false;
@@ -589,14 +591,8 @@ function submitForm() {
 }
 
 // 提交审核
-function handleSubmit() {
-  const _ids = ids.value;
-  proxy.$modal.confirm('是否确认提交审核费用清单编号为"' + _ids + '"的数据项？').then(function () {
-    return submitExpense(_ids);
-  }).then(() => {
-    getList();
-    proxy.$modal.msgSuccess("提交成功");
-  }).catch(() => { });
+function handleCreate() {
+  console.log("生成账单");
 }
 
 /** 删除按钮操作 */

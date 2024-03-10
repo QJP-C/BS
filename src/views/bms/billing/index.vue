@@ -126,11 +126,11 @@
           </el-form-item>
         </el-col>
         <el-col :xs="8" :sm="8" :md="6">
-          <el-form-item label="费用状态" prop="expenseStatus">
+          <!-- <el-form-item label="费用状态" prop="expenseStatus">
             <el-select v-model="queryParams.expenseStatus" placeholder="请选择费用状态" clearable>
               <el-option v-for="dict in bms_expense_status" :key="dict.value" :label="dict.label" :value="dict.value" />
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
         </el-col>
         <el-col :xs="8" :sm="8" :md="6" style="padding-left: 120px;">
           <el-form-item>
@@ -142,7 +142,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['bms:expenses:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -152,14 +152,14 @@
       <el-col :span="1.5">
         <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['bms:expenses:remove']">删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col> -->
+      <!-- <el-col :span="1.5">
         <el-button type="warning" plain icon="Download" @click="handleExport"
           v-hasPermi="['bms:expenses:export']">导出</el-button>
-      </el-col>
-      <!-- <el-col :span="1.5">
-        <el-button type="primary" plain icon="Upload" @click="handleSubmit" v-hasPermi="['bms:expenses:submit']">提交审核</el-button>
       </el-col> -->
+      <el-col :span="1.5">
+        <el-button type="primary" plain icon="Upload" @click="handleSubmit" v-hasPermi="['bms:expenses:submit']">提交审核</el-button>
+      </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -231,6 +231,7 @@
           <dict-tag :options="business_yes_no" :value="scope.row.isApproved" />
         </template>
       </el-table-column>
+      <el-table-column label="驳回信息" align="center" prop="rejectInfo" />
       <el-table-column label="是否锁定" align="center" prop="isLocked">
         <template #default="scope">
           <dict-tag :options="business_yes_no" :value="scope.row.isLocked" />
@@ -246,7 +247,6 @@
           <dict-tag :options="bms_source_sys" :value="scope.row.sourceSys" />
         </template>
       </el-table-column>
-      <!-- <el-table-column label="驳回信息" align="center" prop="rejectInfo" /> -->
       <el-table-column label="备注信息" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
@@ -380,7 +380,7 @@
 </template>
 
 <script setup name="Expenses">
-import { listExpenses, getExpenses, delExpenses, addExpenses, updateExpenses, getCode, submitExpense } from "@/api/bms/expenses";
+import { getExpenses, delExpenses, addExpenses, updateExpenses, getCode, submitExpense, getBillingList } from "@/api/bms/expenses";
 import { getAllWarehouse } from "@/api/base/warehouse";
 import { getAllCustomer } from "@/api/base/customer";
 import { getAllCurrency } from "@/api/base/currency";
@@ -447,7 +447,7 @@ const data = reactive({
       { required: true, message: "费用发生日期不能为空", trigger: "blur" }
     ],
     customerId: [
-      { required: true, message: "客户不能为空", trigger: "blur" }
+      { required: true, message: "客户ID不能为空", trigger: "blur" }
     ],
     paymentType: [
       { required: true, message: "收付类型不能为空", trigger: "change" }
@@ -472,7 +472,7 @@ const { queryParams, form, rules } = toRefs(data);
 /** 查询费用清单列表 */
 function getList() {
   loading.value = true;
-  listExpenses(queryParams.value).then(response => {
+  getBillingList(queryParams.value).then(response => {
     expensesList.value = response.rows;
     total.value = response.total;
     loading.value = false;

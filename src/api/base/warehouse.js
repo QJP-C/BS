@@ -50,3 +50,11 @@ export function delWarehouse(id) {
     method: 'delete'
   })
 }
+
+// 获取所有仓库
+export function getAllWarehouse() {
+  return request({
+    url: '/base/warehouse/getAll',
+    method: 'get'
+  })
+}

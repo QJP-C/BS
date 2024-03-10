@@ -50,3 +50,37 @@ export function delExpenses(id) {
     method: 'delete'
   })
 }
+
+// 费用提交审核
+export function submitExpense(data) {
+  return request({
+    url: '/bms/expenses/submit',
+    method: 'post',
+    data: data
+  })
+}
+
+// 获取计费工具列表
+export function getBillingList() {
+  return request({
+    url: '/bms/expenses/billingList',
+    method: 'get'
+  })
+}
+
+// 获取财务计费工具列表
+export function getFinanceBillingList() { 
+  return request({
+    url: '/bms/expenses/fBillingList',
+    method: 'get'
+  })
+}
+
+// 审核通过
+export function approvedExpense(data) {
+  return request({
+    url: '/bms/expenses/approved',
+    method: 'post',
+    data: data
+  })
+}

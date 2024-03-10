@@ -42,3 +42,11 @@ export function delCurrency(id) {
     method: 'delete'
   })
 }
+
+// 获取所有币种
+export function getAllCurrency() {
+  return request({
+    url: '/base/currency/getAll',
+    method: 'get'
+  })
+}

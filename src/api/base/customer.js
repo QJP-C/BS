@@ -50,3 +50,11 @@ export function delCustomer(id) {
     method: 'delete'
   })
 }
+
+// 获取所有客户
+export function getAllCustomer() {
+  return request({
+    url: '/base/customer/getAll',
+    method: 'get'
+  })
+}

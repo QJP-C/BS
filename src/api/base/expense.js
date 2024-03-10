@@ -50,3 +50,12 @@ export function delExpense(id) {
     method: 'delete'
   })
 }
+
+// 获取所有费用项目
+export function getAllExpense() {
+  return request({
+    url: '/base/expense/getAll',
+    method: 'get'
+  })
+}
+
