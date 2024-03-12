@@ -248,16 +248,7 @@
           <dict-tag :options="bms_source_sys" :value="scope.row.sourceSys" />
         </template>
       </el-table-column>
-      <!-- <el-table-column label="驳回信息" align="center" prop="rejectInfo" /> -->
       <el-table-column label="备注信息" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['bms:expenses:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['bms:expenses:remove']">删除</el-button>
-        </template>
-      </el-table-column>
     </el-table>
 
     <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"

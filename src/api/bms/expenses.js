@@ -80,7 +80,16 @@ export function getFinanceBillingList() {
 export function approvedExpense(data) {
   return request({
     url: '/bms/expenses/approved',
-    method: 'post',
+    method: 'put',
+    data: data
+  })
+}
+
+// 审核驳回
+export function rejectExpense(id,data) {
+  return request({
+    url: '/bms/expenses/reject/'+id,
+    method: 'put',
     data: data
   })
 }

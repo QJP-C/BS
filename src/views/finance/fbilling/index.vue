@@ -159,7 +159,8 @@
       </el-col> -->
       <!-- 审核通过 -->
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="Check" @click="handleApproved" v-hasPermi="['bms:expenses:approved']">审核通过</el-button>
+        <el-button type="primary" plain icon="Check" @click="handleApproved"
+          v-hasPermi="['bms:expenses:approved']">审核通过</el-button>
       </el-col>
       <!-- <el-col :span="1.5">
         <el-button type="primary" plain icon="Upload" @click="handleSubmit" v-hasPermi="['bms:expenses:submit']">提交审核</el-button>
@@ -168,9 +169,9 @@
     </el-row>
 
     <el-table v-loading="loading" :data="expensesList" @selection-change="handleSelectionChange" height="680px" border>
-      <el-table-column type="selection" width="55" align="center" fixed="left"/>
-      <el-table-column label="费用名称" align="center" prop="name" width="140"/>
-      <el-table-column label="费用编码" align="center" prop="code" width="160"/>
+      <el-table-column type="selection" width="55" align="center" fixed="left" />
+      <el-table-column label="费用名称" align="center" prop="name" width="140" />
+      <el-table-column label="费用编码" align="center" prop="code" width="160" />
       <el-table-column label="订单ID" align="center" prop="orderId" />
       <el-table-column label="仓库" align="center" prop="warehouseId">
         <template #default="scope">
@@ -210,7 +211,7 @@
         </template>
       </el-table-column>
       <el-table-column label="费用价格" align="center" prop="amountTotal" />
-      <el-table-column label="币种" align="center" prop="currencyId" >
+      <el-table-column label="币种" align="center" prop="currencyId">
         <template #default="scope">
           <dict-tag :options="currencyOptions" :value="scope.row.currencyId" />
         </template>
@@ -252,12 +253,14 @@
       </el-table-column>
       <!-- <el-table-column label="驳回信息" align="center" prop="rejectInfo" /> -->
       <el-table-column label="备注信息" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" >
         <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
+          <!-- <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['bms:expenses:edit']">修改</el-button>
           <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['bms:expenses:remove']">删除</el-button>
+            v-hasPermi="['bms:expenses:remove']">删除</el-button> -->
+          <el-button link type="primary" icon="CloseBold" @click="handleReject(scope.row)"
+            v-hasPermi="['bms:expenses:reject']">驳回</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -384,7 +387,7 @@
 </template>
 
 <script setup name="Expenses">
-import { getExpenses, delExpenses, addExpenses, updateExpenses, getCode, submitExpense,getFinanceBillingList,approvedExpense } from "@/api/bms/expenses";
+import { getExpenses, delExpenses, addExpenses, updateExpenses, getCode, rejectExpense, getFinanceBillingList, approvedExpense } from "@/api/bms/expenses";
 import { getAllWarehouse } from "@/api/base/warehouse";
 import { getAllCustomer } from "@/api/base/customer";
 import { getAllCurrency } from "@/api/base/currency";
@@ -603,6 +606,23 @@ function handleApproved() {
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("审核成功");
+  }).catch(() => { });
+}
+
+// 驳回
+function handleReject(row) {
+  proxy.$prompt('请输入驳回原因', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    inputPattern: /\S/,
+    inputErrorMessage: '驳回原因不能为空'
+  }).then(({ value }) => {
+    const _id = row.id || ids.value;
+    const exp = { rejectInfo: value }
+    rejectExpense(_id, exp).then(() => {
+      getList();
+      proxy.$modal.msgSuccess("驳回成功");
+    });
   }).catch(() => { });
 }
 

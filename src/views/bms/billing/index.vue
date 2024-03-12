@@ -189,7 +189,7 @@
           <dict-tag :options="bms_payment_method" :value="scope.row.paymentMethod" />
         </template>
       </el-table-column>
-
+      <el-table-column label="驳回信息" align="center" prop="rejectInfo" />
       <el-table-column label="费用项目" align="center" prop="expenseItemId" width="100">
         <template #default="scope">
           <dict-tag :options="expenseOptions" :value="scope.row.expenseItemId" />
@@ -231,7 +231,6 @@
           <dict-tag :options="business_yes_no" :value="scope.row.isApproved" />
         </template>
       </el-table-column>
-      <el-table-column label="驳回信息" align="center" prop="rejectInfo" />
       <el-table-column label="是否锁定" align="center" prop="isLocked">
         <template #default="scope">
           <dict-tag :options="business_yes_no" :value="scope.row.isLocked" />
@@ -248,14 +247,6 @@
         </template>
       </el-table-column>
       <el-table-column label="备注信息" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['bms:expenses:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['bms:expenses:remove']">删除</el-button>
-        </template>
-      </el-table-column>
     </el-table>
 
     <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
