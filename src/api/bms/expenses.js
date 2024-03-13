@@ -93,3 +93,21 @@ export function rejectExpense(id,data) {
     data: data
   })
 }
+
+//账单生成列表
+export function createBillList(query) {
+  return request({
+    url: '/bms/expenses/createBillList',
+    method: 'get',
+    params: query
+  })
+}
+
+//账单生成
+export function createBill(data) {
+  return request({
+    url: '/bms/expenses/createBill',
+    method: 'post',
+    data: data
+  })
+}

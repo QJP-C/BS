@@ -373,7 +373,7 @@
 </template>
 
 <script setup name="Expenses">
-import { getExpenses, delExpenses, addExpenses, updateExpenses, getCode, submitExpense, getBillingList } from "@/api/bms/expenses";
+import { getExpenses, delExpenses, addExpenses, updateExpenses, getCode, createBillList,createBill } from "@/api/bms/expenses";
 import { getAllWarehouse } from "@/api/base/warehouse";
 import { getAllCustomer } from "@/api/base/customer";
 import { getAllCurrency } from "@/api/base/currency";
@@ -465,7 +465,7 @@ const { queryParams, form, rules } = toRefs(data);
 /** 查询费用清单列表 */
 function getList() {
   loading.value = true;
-  getBillingList(queryParams.value).then(response => {
+  createBillList(queryParams.value).then(response => {
     expensesList.value = response.rows;
     total.value = response.total;
     loading.value = false;
@@ -539,6 +539,14 @@ function handleSelectionChange(selection) {
   multiple.value = !selection.length;
 }
 
+// 生成账单
+function handleCreate() {
+  createBill(ids.value).then(response => {
+    proxy.$modal.msgSuccess("生成账单成功");
+    getList();
+  });
+}
+
 /** 新增按钮操作 */
 function handleAdd() {
   reset();
@@ -579,11 +587,6 @@ function submitForm() {
       }
     }
   });
-}
-
-// 提交审核
-function handleCreate() {
-  console.log("生成账单");
 }
 
 /** 删除按钮操作 */
