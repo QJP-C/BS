@@ -3,63 +3,32 @@
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="收付类型" prop="paymentType">
         <el-select v-model="queryParams.paymentType" placeholder="请选择收付类型" clearable>
-          <el-option
-            v-for="dict in base_expense_payment_type"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
+          <el-option v-for="dict in base_expense_payment_type" :key="dict.value" :label="dict.label"
+            :value="dict.value" />
         </el-select>
       </el-form-item>
-      <el-form-item label="客户ID" prop="customerId">
-        <el-input
-          v-model="queryParams.customerId"
-          placeholder="请输入客户ID"
-          clearable
-          @keyup.enter="handleQuery"
-        />
+      <el-form-item label="客户" prop="customerId">
+        <el-select v-model="queryParams.customerId" placeholder="请选择客户">
+          <el-option v-for="item in customerOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
-      <el-form-item label="币种ID" prop="currencyId">
-        <el-input
-          v-model="queryParams.currencyId"
-          placeholder="请输入币种ID"
-          clearable
-          @keyup.enter="handleQuery"
-        />
+      <el-form-item label="币种" prop="currencyId">
+        <el-select v-model="queryParams.currencyId" placeholder="请选择币种">
+          <el-option v-for="item in currencyOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
-      <el-form-item label="仓库ID" prop="warehouseId">
-        <el-input
-          v-model="queryParams.warehouseId"
-          placeholder="请输入仓库ID"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="部门ID" prop="deptId">
-        <el-input
-          v-model="queryParams.deptId"
-          placeholder="请输入部门ID"
-          clearable
-          @keyup.enter="handleQuery"
-        />
+      <el-form-item label="仓库" prop="warehouseId">
+        <el-select v-model="queryParams.warehouseId" placeholder="请选择仓库">
+          <el-option v-for="item in warehouseOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
       <el-form-item label="来源系统" prop="sourceSys">
         <el-select v-model="queryParams.sourceSys" placeholder="请选择来源系统" clearable>
-          <el-option
-            v-for="dict in bms_source_sys"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
+          <el-option v-for="dict in bms_source_sys" :key="dict.value" :label="dict.label" :value="dict.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="金额" prop="amount">
-        <el-input
-          v-model="queryParams.amount"
-          placeholder="请输入金额"
-          clearable
-          @keyup.enter="handleQuery"
-        />
+        <el-input v-model="queryParams.amount" placeholder="请输入金额" clearable @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
@@ -69,92 +38,74 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="Plus"
-          @click="handleAdd"
-          v-hasPermi="['bms:bl:add']"
-        >新增</el-button>
+        <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['bms:bl:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="Edit"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['bms:bl:edit']"
-        >修改</el-button>
+        <el-button type="success" plain icon="Edit" :disabled="single" @click="handleUpdate"
+          v-hasPermi="['bms:bl:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="Delete"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['bms:bl:remove']"
-        >删除</el-button>
+        <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete"
+          v-hasPermi="['bms:bl:remove']">删除</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="Download"
-          @click="handleExport"
-          v-hasPermi="['bms:bl:export']"
-        >导出</el-button>
+        <el-button type="warning" plain icon="Download" @click="handleExport"
+          v-hasPermi="['bms:bl:export']">导出</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="blList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="账单ID" align="center" prop="id" /> -->
+      <el-table-column label="账单编号" align="center" prop="blCode" />
       <el-table-column label="收付类型" align="center" prop="paymentType">
         <template #default="scope">
-          <dict-tag :options="base_expense_payment_type" :value="scope.row.paymentType"/>
+          <dict-tag :options="base_expense_payment_type" :value="scope.row.paymentType" />
         </template>
       </el-table-column>
-      <el-table-column label="客户ID" align="center" prop="customerId" />
-      <el-table-column label="币种ID" align="center" prop="currencyId" />
-      <el-table-column label="仓库ID" align="center" prop="warehouseId" />
-      <el-table-column label="部门ID" align="center" prop="deptId" />
+      <el-table-column label="客户" align="center" prop="customerId" width="100">
+        <template #default="scope">
+          <dict-tag :options="customerOptions" :value="scope.row.customerId" />
+        </template>
+      </el-table-column>
+      <el-table-column label="币种" align="center" prop="currencyId">
+        <template #default="scope">
+          <dict-tag :options="currencyOptions" :value="scope.row.currencyId" />
+        </template>
+      </el-table-column>
+      <el-table-column label="仓库" align="center" prop="warehouseId">
+        <template #default="scope">
+          <dict-tag :options="warehouseOptions" :value="scope.row.warehouseId" />
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="部门ID" align="center" prop="deptId" /> -->
       <el-table-column label="来源系统" align="center" prop="sourceSys">
         <template #default="scope">
-          <dict-tag :options="bms_source_sys" :value="scope.row.sourceSys"/>
+          <dict-tag :options="bms_source_sys" :value="scope.row.sourceSys" />
         </template>
       </el-table-column>
-      <el-table-column label="金额" align="center" prop="amount" />
-      <el-table-column label="备注信息" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="总金额" align="center" prop="amount" />
+      <!-- <el-table-column label="备注信息" align="center" prop="remark" /> -->
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['bms:bl:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['bms:bl:remove']">删除</el-button>
+          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
+            v-hasPermi="['bms:bl:edit']">修改</el-button>
+          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
+            v-hasPermi="['bms:bl:remove']">删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
-    
-    <pagination
-      v-show="total>0"
-      :total="total"
-      v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
-    />
+
+    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
+      v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改账单管理对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="blRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="收付类型" prop="paymentType">
           <el-select v-model="form.paymentType" placeholder="请选择收付类型">
-            <el-option
-              v-for="dict in base_expense_payment_type"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
+            <el-option v-for="dict in base_expense_payment_type" :key="dict.value" :label="dict.label"
+              :value="parseInt(dict.value)"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="客户ID" prop="customerId">
@@ -171,12 +122,8 @@
         </el-form-item>
         <el-form-item label="来源系统" prop="sourceSys">
           <el-select v-model="form.sourceSys" placeholder="请选择来源系统">
-            <el-option
-              v-for="dict in bms_source_sys"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
+            <el-option v-for="dict in bms_source_sys" :key="dict.value" :label="dict.label"
+              :value="parseInt(dict.value)"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="金额" prop="amount">
@@ -331,12 +278,12 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const _ids = row.id || ids.value;
-  proxy.$modal.confirm('是否确认删除账单管理编号为"' + _ids + '"的数据项？').then(function() {
+  proxy.$modal.confirm('是否确认删除账单管理编号为"' + _ids + '"的数据项？').then(function () {
     return delBl(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");
-  }).catch(() => {});
+  }).catch(() => { });
 }
 
 /** 导出按钮操作 */

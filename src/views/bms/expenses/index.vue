@@ -434,6 +434,9 @@ const data = reactive({
     rejectInfo: null,
   },
   rules: {
+    name: [
+      { required: true, message: "费用名称不能为空", trigger: "blur" }
+    ],
     code: [
       { required: true, message: "费用编码不能为空", trigger: "blur" }
     ],
@@ -463,6 +466,12 @@ const data = reactive({
     ],
     amountTotal: [
       { required: true, message: "费用价格不能为空", trigger: "blur" }
+    ],
+    currencyId: [
+      { required: true, message: "币种不能为空", trigger: "change" }
+    ],
+    expenseItemId: [
+      { required: true, message: "费用项目不能为空", trigger: "change" }
     ],
   }
 });
