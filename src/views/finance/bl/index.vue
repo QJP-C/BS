@@ -78,14 +78,22 @@
           <dict-tag :options="warehouseOptions" :value="scope.row.warehouseId" />
         </template>
       </el-table-column>
-
+      <!-- <el-table-column label="部门ID" align="center" prop="deptId" /> -->
       <el-table-column label="来源系统" align="center" prop="sourceSys">
         <template #default="scope">
           <dict-tag :options="bms_source_sys" :value="scope.row.sourceSys" />
         </template>
       </el-table-column>
       <el-table-column label="总金额" align="center" prop="amount" />
-
+      <!-- <el-table-column label="备注信息" align="center" prop="remark" /> -->
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template #default="scope">
+          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
+            v-hasPermi="['bms:bl:edit']">修改</el-button>
+          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
+            v-hasPermi="['bms:bl:remove']">删除</el-button>
+        </template>
+      </el-table-column> -->
     </el-table>
 
     <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"

@@ -111,3 +111,21 @@ export function createBill(data) {
     data: data
   })
 }
+
+//运输报表列表
+export function selectTransportReportList(query) {
+  return request({
+    url: '/bms/expenses/selectTransportReportList',
+    method: 'get',
+    params: query
+  })
+}
+
+//仓储报表列表
+export function selectWarehouseReportList(query) {
+  return request({
+    url: '/bms/expenses/selectWarehouseReportList',
+    method: 'get',
+    params: query
+  })
+}
