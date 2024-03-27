@@ -42,3 +42,12 @@ export function delBl(id) {
     method: 'delete'
   })
 }
+
+// 发送OA
+export function sendOA(data) {
+  return request({
+    url: '/bms/bl/sendOA',
+    method: 'put',
+    data: data
+  })
+}

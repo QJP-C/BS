@@ -52,6 +52,7 @@
         <el-button type="warning" plain icon="Download" @click="handleExport"
           v-hasPermi="['bms:bl:export']">导出</el-button>
       </el-col>
+
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -61,6 +62,11 @@
       <el-table-column label="收付类型" align="center" prop="paymentType">
         <template #default="scope">
           <dict-tag :options="base_expense_payment_type" :value="scope.row.paymentType" />
+        </template>
+      </el-table-column>
+      <el-table-column label="是否发送OA" align="center" prop="isOa">
+        <template #default="scope">
+          <dict-tag :options="business_yes_no" :value="scope.row.isOa" />
         </template>
       </el-table-column>
       <el-table-column label="客户" align="center" prop="customerId" width="100">
@@ -135,14 +141,14 @@
   </div>
 </template>
 
-<script setup name="Bl">
+<script setup name="fbl">
 import { listBl, getBl, delBl, addBl, updateBl } from "@/api/bms/bl";
 import { getAllWarehouse } from "@/api/base/warehouse";
 import { getAllCustomer } from "@/api/base/customer";
 import { getAllCurrency } from "@/api/base/currency";
 import { getAllExpense } from "@/api/base/expense";
 const { proxy } = getCurrentInstance();
-const { bms_source_sys, base_expense_payment_type } = proxy.useDict('bms_source_sys', 'base_expense_payment_type');
+const { bms_source_sys, base_expense_payment_type,business_yes_no } = proxy.useDict('bms_source_sys', 'base_expense_payment_type','business_yes_no');
 
 const blList = ref([]);
 const open = ref(false);

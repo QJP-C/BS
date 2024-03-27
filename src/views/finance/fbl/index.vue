@@ -52,6 +52,10 @@
         <el-button type="warning" plain icon="Download" @click="handleExport"
           v-hasPermi="['bms:bl:export']">导出</el-button>
       </el-col>
+      <!-- 发送OA -->
+      <el-col :span="1.5">
+        <el-button type="info" plain icon="Position" @click="handleSendOA" v-hasPermi="['bms:bl:sendOA']">发送OA</el-button>
+      </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -61,6 +65,11 @@
       <el-table-column label="收付类型" align="center" prop="paymentType">
         <template #default="scope">
           <dict-tag :options="base_expense_payment_type" :value="scope.row.paymentType" />
+        </template>
+      </el-table-column>
+      <el-table-column label="是否发送OA" align="center" prop="isOa">
+        <template #default="scope">
+          <dict-tag :options="business_yes_no" :value="scope.row.isOa" />
         </template>
       </el-table-column>
       <el-table-column label="客户" align="center" prop="customerId" width="100">
@@ -144,13 +153,13 @@
 </template>
 
 <script setup name="Bl">
-import { listBl, getBl, delBl, addBl, updateBl } from "@/api/bms/bl";
+import { listBl, getBl, delBl, addBl, updateBl,sendOA } from "@/api/bms/bl";
 import { getAllWarehouse } from "@/api/base/warehouse";
 import { getAllCustomer } from "@/api/base/customer";
 import { getAllCurrency } from "@/api/base/currency";
 import { getAllExpense } from "@/api/base/expense";
 const { proxy } = getCurrentInstance();
-const { bms_source_sys, base_expense_payment_type } = proxy.useDict('bms_source_sys', 'base_expense_payment_type');
+const { bms_source_sys, base_expense_payment_type,business_yes_no } = proxy.useDict('bms_source_sys', 'base_expense_payment_type','business_yes_no');
 
 const blList = ref([]);
 const open = ref(false);
@@ -291,6 +300,22 @@ function handleExport() {
   proxy.download('bms/bl/export', {
     ...queryParams.value
   }, `bl_${new Date().getTime()}.xlsx`)
+}
+
+// 发送OA
+function handleSendOA() {
+  const _ids = ids.value;
+  if (_ids.length == 0) {
+    proxy.$modal.msgWarning("请选择需要发送OA的数据");
+    return;
+  }
+  proxy.$modal.confirm('是否确认发送OA？').then(function () {
+    return sendOA(_ids);
+  }).then(() => {
+    proxy.$modal.msgSuccess("发送OA成功");
+  }).catch(() => { });
+  // 刷新
+  getList();
 }
 
 // 仓库下拉框
