@@ -132,7 +132,7 @@
             </el-select>
           </el-form-item> -->
         </el-col>
-        <el-col :xs="8" :sm="8" :md="6" style="padding-left: 120px;">
+        <el-col :xs="8" :sm="8" :md="6">
           <el-form-item>
             <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
             <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -158,7 +158,7 @@
           v-hasPermi="['bms:expenses:export']">导出</el-button>
       </el-col> -->
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="Upload" @click="handleSubmit" v-hasPermi="['bms:expenses:submit']">提交审核</el-button>
+        <el-button type="primary" plain icon="Upload" @click="handleSubmit" >提交审核</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>

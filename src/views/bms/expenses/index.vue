@@ -132,7 +132,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xs="8" :sm="8" :md="6" style="padding-left: 120px;">
+        <el-col :xs="8" :sm="8" :md="6" >
           <el-form-item>
             <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
             <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -143,19 +143,19 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['bms:expenses:add']">新增</el-button>
+        <el-button type="primary" plain icon="Plus" @click="handleAdd" >新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="Edit" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['bms:expenses:edit']">修改</el-button>
+          >修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['bms:expenses:remove']">删除</el-button>
+          >删除</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="warning" plain icon="Download" @click="handleExport"
-          v-hasPermi="['bms:expenses:export']">导出</el-button>
+          >导出</el-button>
       </el-col>
       <!-- <el-col :span="1.5">
         <el-button type="primary" plain icon="Upload" @click="handleSubmit" v-hasPermi="['bms:expenses:submit']">提交审核</el-button>

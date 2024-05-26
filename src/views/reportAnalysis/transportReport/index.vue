@@ -34,7 +34,7 @@
         <el-col :xs="8" :sm="8" :md="6"/>
         <el-col :xs="8" :sm="8" :md="6"/>
         <el-col :xs="8" :sm="8" :md="6"/>
-        <el-col :xs="8" :sm="8" :md="6" style="padding-left: 120px;">
+        <el-col :xs="8" :sm="8" :md="6" >
           <el-form-item>
             <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
             <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -43,7 +43,8 @@
       </el-row>
     </el-form>
 
-    <el-table v-loading="loading" :data="expensesList" @selection-change="handleSelectionChange" height="680px" border>
+    <el-table v-loading="loading" :data="expensesList" 
+    @selection-change="handleSelectionChange" height="680px" border>
       <el-table-column label="费用名称" align="center" prop="name" />
       <el-table-column label="订单ID" align="center" prop="orderId" />
       <el-table-column label="客户名称" align="center" prop="customerName" />
@@ -159,7 +160,7 @@ const data = reactive({
 
 const { queryParams, form, rules } = toRefs(data);
 
-/** 查询费用清单列表 */
+/** 查询运输综合报表列表 */
 function getList() {
   loading.value = true;
   selectTransportReportList(queryParams.value).then(response => {

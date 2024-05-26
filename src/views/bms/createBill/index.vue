@@ -132,7 +132,7 @@
             </el-select>
           </el-form-item> -->
         </el-col>
-        <el-col :xs="8" :sm="8" :md="6" style="padding-left: 120px;">
+        <el-col :xs="8" :sm="8" :md="6" >
           <el-form-item>
             <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
             <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -160,7 +160,7 @@
       <!-- 生成账单 -->
       <el-col :span="1.5">
         <el-button type="primary" plain icon="Check" @click="handleCreate" :disabled="multiple"
-          v-hasPermi="['bms:expenses:submit']">生成账单</el-button>
+          >生成账单</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>

@@ -132,7 +132,7 @@
             </el-select>
           </el-form-item> -->
         </el-col>
-        <el-col :xs="8" :sm="8" :md="6" style="padding-left: 120px;">
+        <el-col :xs="8" :sm="8" :md="6">
           <el-form-item>
             <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
             <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -160,7 +160,7 @@
       <!-- 审核通过 -->
       <el-col :span="1.5">
         <el-button type="primary" plain icon="Check" @click="handleApproved"
-          v-hasPermi="['bms:expenses:approved']">审核通过</el-button>
+          >审核通过</el-button>
       </el-col>
       <!-- <el-col :span="1.5">
         <el-button type="primary" plain icon="Upload" @click="handleSubmit" v-hasPermi="['bms:expenses:submit']">提交审核</el-button>
@@ -260,7 +260,7 @@
           <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
             v-hasPermi="['bms:expenses:remove']">删除</el-button> -->
           <el-button link type="primary" icon="CloseBold" @click="handleReject(scope.row)"
-            v-hasPermi="['bms:expenses:reject']">驳回</el-button>
+            >驳回</el-button>
         </template>
       </el-table-column>
     </el-table>

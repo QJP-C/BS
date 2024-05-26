@@ -34,7 +34,7 @@
         <el-col :xs="8" :sm="8" :md="6"/>
         <el-col :xs="8" :sm="8" :md="6"/>
         <el-col :xs="8" :sm="8" :md="6"/>
-        <el-col :xs="8" :sm="8" :md="6" style="padding-left: 120px;">
+        <el-col :xs="8" :sm="8" :md="6" >
           <el-form-item>
             <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
             <el-button icon="Refresh" @click="resetQuery">重置</el-button>
